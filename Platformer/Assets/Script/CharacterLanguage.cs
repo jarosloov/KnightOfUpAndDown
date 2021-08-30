@@ -28,8 +28,8 @@ public class CharacterLanguage : MonoBehaviour
             }
             else
             {
-                StopCoroutine(TypeLine());
-                text.text = lines[_index];
+                //StopCoroutine(TypeLine());
+                //text.text = lines[_index];
             }
         }
     }
@@ -41,7 +41,7 @@ public class CharacterLanguage : MonoBehaviour
         StartCoroutine(TypeLine());
     }
 
-    IEnumerator TypeLine()
+    private IEnumerator TypeLine()
     {
         foreach (var c in lines[_index].ToCharArray())
         {
@@ -63,7 +63,7 @@ public class CharacterLanguage : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
     

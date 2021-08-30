@@ -24,8 +24,10 @@ public class MovementCharacter : MonoBehaviour
         Revolution();
         Attack();
         Flip();
-        if(Input.GetKeyDown(KeyCode.Escape))
-            SceneManager.LoadScene(0);
+        /*if(Input.GetKeyDown(KeyCode.Escape))
+            SceneManager.LoadScene(0);*/
+        if(Input.GetKeyDown(KeyCode.Q))
+            SceneManager.LoadScene(7);
     }
 
     private void Flip()
@@ -74,13 +76,13 @@ public class MovementCharacter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.GetComponent<Ground>() || other.GetComponent<Ground>() == null)
+        if (other.GetComponent<Ground>() != null)
             _ground = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<Ground>() || other.GetComponent<Ground>() != null)
+        if (other.GetComponent<Ground>() != null)
             _ground = false;
   
     }

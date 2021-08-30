@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ThirdPlate : MonoBehaviour
 {
-    [SerializeField] private GameObject gameObject;
+    [SerializeField] private new GameObject gameObject;
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<MovementCharacter>())

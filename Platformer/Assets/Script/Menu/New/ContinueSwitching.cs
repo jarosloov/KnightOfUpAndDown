@@ -64,7 +64,7 @@ public class ContinueSwitching : MonoBehaviour
 
   private void ClickButtonContinue()
   {
-    SceneManager.LoadScene(1);
+    SceneManager.LoadScene(7);
   }
 
   private void ClickButtonExitGame()

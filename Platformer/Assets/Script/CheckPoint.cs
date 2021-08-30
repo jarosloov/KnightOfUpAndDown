@@ -29,7 +29,7 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.GetComponent<SharpSpikes>() && other.GetComponent<SharpSpikes>() != null)
+        if (other.GetComponent<SharpSpikes>() != null)
         {
             StartCoroutine(Die());
         }
@@ -37,6 +37,8 @@ public class CheckPoint : MonoBehaviour
     
     IEnumerator Die()
     {
+        if (GetComponent<CharacterLives>() != null)
+            GetComponent<CharacterLives>().live = 100;
         activatingСheckpoint.PlayOneShot(_clip);
         animator.Play("Die");
         yield return new WaitForSeconds(0.25f);

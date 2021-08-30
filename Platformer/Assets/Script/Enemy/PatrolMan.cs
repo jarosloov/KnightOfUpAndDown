@@ -1,20 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PatrolMan : MonoBehaviour
 {
-    [SerializeField] private float _speed;
-    [SerializeField] private int _pointionOfPatrol;
-    [SerializeField] private Transform _point;
-    [SerializeField] private SpriteRenderer _enemy;
+    [SerializeField] private float speed; 
+    [SerializeField] private float pointionOfPatrol;
+    [SerializeField] private Transform point;
+    [SerializeField] private SpriteRenderer enemy;
 
-    [SerializeField] private Animator _enemyAnimator;
+    [SerializeField] private Animator enemyAnimator;
     
 
-    [SerializeField] private Transform _player;
+    [SerializeField] private Transform player;
     [SerializeField] private float _stoppingDistance; // дистания остановке
     [SerializeField] private float _attackDistance;
+    
+    [Header("Attack")]
+    
+    [SerializeField] private Transform attackPose;
+    [SerializeField] private float attackRange;
+
+    [SerializeField] private LayerMask whatIsEnamy;
+
+    [SerializeField] private int damage;
     
     private bool _moveingRight;
     private bool _chill = false;
@@ -24,17 +36,24 @@ public class PatrolMan : MonoBehaviour
 
     private float _time;
     [SerializeField] private float _timeAttack;
+
+    public bool activity;
+        
+    
     
     private void Start()
     {
+        speed = Random.Range(speed - 2, speed + 2);
+        pointionOfPatrol = Random.Range(pointionOfPatrol - 1, pointionOfPatrol + 1);
+        activity = true;
         if(gameObject.GetComponent<MovementCharacter>() != null)
-            _player = gameObject.GetComponent<MovementCharacter>().transform;
+            player = gameObject.GetComponent<MovementCharacter>().transform;
     }
 
-    private void Update()
+    private void Activity()
     {
         Animations();
-        if (Vector2.Distance(transform.position, _player.transform.position) < _attackDistance && _angry)
+        if (Vector2.Distance(transform.position, player.transform.position) < _attackDistance && _angry)
         {
             _chill = _goBack = false;
             //print("Attack");
@@ -42,20 +61,20 @@ public class PatrolMan : MonoBehaviour
             Attack();
         }
         
-        if (Vector2.Distance(transform.position, _point.position) < _pointionOfPatrol && _angry == false)
+        if (Vector2.Distance(transform.position, point.position) < pointionOfPatrol && _angry == false)
         {
             _chill = true;
             _goBack = false;
         }
 
-        if (Vector2.Distance(transform.position, _player.transform.position) < _stoppingDistance)
+        if (Vector2.Distance(transform.position, player.transform.position) < _stoppingDistance)
         {
             _angry = true;
             _goBack = false;
             _chill = false;
         }
         
-        if (Vector2.Distance(transform.position, _player.transform.position) > _stoppingDistance)
+        if (Vector2.Distance(transform.position, player.transform.position) > _stoppingDistance)
         {
             _goBack = true;
             _angry = false;
@@ -73,13 +92,23 @@ public class PatrolMan : MonoBehaviour
             Attack();
             print("Attack");
         }
-            
+    }
+    
+    
+    
+    private void Update()
+    {
+        if(activity)
+            Activity();
     }
 
     private void Animations()
     {
-        _enemyAnimator.SetBool("run", (_goBack || _angry ||_angry));
-        _enemyAnimator.SetBool("attack", Vector2.Distance(transform.position, _player.transform.position) < _attackDistance && _angry);
+        enemyAnimator.SetBool("run", (_goBack || _angry ||_angry));
+        enemyAnimator.SetBool("attack", Vector2.Distance(transform.position, player.transform.position) < _attackDistance && _angry);
+        
+       
+        //_enemyAnimator.SetBool("attack", Vector2.Distance(transform.position, _player.transform.position) < _attackDistance && _angry);
     }
     
 
@@ -88,57 +117,76 @@ public class PatrolMan : MonoBehaviour
         _time += Time.deltaTime;
         if (_time >= _timeAttack)
         {
-            print("Удар");
+            //print("Удар");
             _time = 0;
         }
     }
-
+    /*
+    public void OnAttack()
+    {
+        var enemiesToDamage = Physics2D.OverlapCircleAll(attackPose.position, attackRange, whatIsEnamy);
+        foreach (var t in enemiesToDamage)
+        {
+            if(t.GetComponent<CharacterLives>())
+                t.GetComponent<CharacterLives>().TakeDamage(damage);
+        }
+        print("Anim");
+    }
+    
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPose.position, attackRange);
+    }
+    */
     private void Chill()
     {
-        if (transform.position.x > _point.position.x + _pointionOfPatrol)
+        if (transform.position.x > point.position.x + pointionOfPatrol)
         {
             _moveingRight = false;
         }
-        else if (transform.position.x < _point.position.x - _pointionOfPatrol)
+        else if (transform.position.x < point.position.x - pointionOfPatrol)
         {
             _moveingRight = true;
         }
         if (_moveingRight)
         {
-            transform.position = new Vector2(transform.position.x + _speed * Time.deltaTime,
+            transform.position = new Vector2(transform.position.x + speed * Time.deltaTime,
                 transform.position.y);
-            _enemy.flipX = false;
+            transform.localScale = new Vector2(1,transform.localScale.y);
         }
         
         else
         {
-            transform.position = new Vector2(transform.position.x - _speed * Time.deltaTime,
+            transform.position = new Vector2(transform.position.x - speed * Time.deltaTime,
                 transform.position.y);
-            _enemy.flipX = true;
+            transform.localScale = new Vector2(-1,transform.localScale.y);
         }
     }
 
     private void Angry()
     {
         transform.position = Vector2.MoveTowards(transform.position, 
-            _player.position, _speed * Time.deltaTime);
+            player.position, speed * Time.deltaTime);
         
-        if (transform.position.x > _player.position.x )
+        if (transform.position.x > player.position.x )
         {
             _moveingRight = false;
         }
-        else if (transform.position.x < _player.position.x )
+        else if (transform.position.x < player.position.x )
         {
             _moveingRight = true;
         }
 
         if (_moveingRight)
         {
-            _enemy.flipX = false;
+            transform.localScale = new Vector2(1,transform.localScale.y);
+            // _enemy.flipX = felse;
         }
         else
         {
-            _enemy.flipX = true;
+           // _enemy.flipX = true;
+           transform.localScale = new Vector2(-1,transform.localScale.y);
         }
     }
 
@@ -146,24 +194,24 @@ public class PatrolMan : MonoBehaviour
     {
        
         transform.position = Vector2.MoveTowards(transform.position, 
-            _point.position, _speed * Time.deltaTime);
+            point.position, speed * Time.deltaTime);
         
-        if (transform.position.x > _point.position.x + _pointionOfPatrol)
+        if (transform.position.x > point.position.x + pointionOfPatrol)
         {
             _moveingRight = false;
         }
-        else if (transform.position.x < _point.position.x - _pointionOfPatrol)
+        else if (transform.position.x < point.position.x - pointionOfPatrol)
         {
             _moveingRight = true;
         }
 
         if (_moveingRight)
         {
-            _enemy.flipX = false;
+            transform.localScale = new Vector2(1,transform.localScale.y);
         }
         else
         {
-            _enemy.flipX = true;
+            transform.localScale = new Vector2(-1,transform.localScale.y);
         }
     }
     
