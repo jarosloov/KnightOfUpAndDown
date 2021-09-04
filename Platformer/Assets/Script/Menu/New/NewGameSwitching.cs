@@ -23,6 +23,9 @@ public class NewGameSwitching : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource switchh;
     private AudioClip _clip;
+    
+    [Header("Scene")]
+    [SerializeField] private int sceneID;
 
     private string[] _nameButtons;  
     private int _position;
@@ -88,7 +91,8 @@ public class NewGameSwitching : MonoBehaviour
   private void ClickButtonNewGame()
   {
     gameObject.SetActive(false);
-    windowCutscene.SetActive(true);
+    //windowCutscene.SetActive(true);
+    SceneManager.LoadScene(sceneID);
   }
 
   private int IndexPosition(int position)

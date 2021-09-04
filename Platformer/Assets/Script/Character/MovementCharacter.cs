@@ -24,10 +24,6 @@ public class MovementCharacter : MonoBehaviour
         Revolution();
         Attack();
         Flip();
-        /*if(Input.GetKeyDown(KeyCode.Escape))
-            SceneManager.LoadScene(0);*/
-        if(Input.GetKeyDown(KeyCode.Q))
-            SceneManager.LoadScene(7);
     }
 
     private void Flip()

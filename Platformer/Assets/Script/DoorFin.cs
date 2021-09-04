@@ -10,6 +10,7 @@ public class DoorFin : MonoBehaviour
     {
         if (other.GetComponent<MovementCharacter>())
         {
+            PlayerPrefs.SetInt("PointsPlayer", 0);
             SceneManager.LoadScene(sceneID);
         }
     }

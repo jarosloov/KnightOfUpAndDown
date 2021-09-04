@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WindowNewGameSwitching : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class WindowNewGameSwitching : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource switchh;
     private AudioClip _clip;
+
+    [Header("Scene")]
+    [SerializeField] private int sceneID;
 
     private string[] _nameButtons;  
   private int _position;
@@ -53,26 +57,27 @@ public class WindowNewGameSwitching : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
-    {
-      //Action
-      switch (menuButton[_position].text)
-      {
-        case "~ Нет ~":
-          No();
-          break;
-        case "~ Да ~":
-          Yes();
-          break;
-      }
-    }
+        {
+          //Action
+          switch (menuButton[_position].text)
+          {
+            case "~ Нет ~":
+              No();
+              break;
+            case "~ Да ~":
+              Yes();
+              break;
+          }
+        }
   }
 
   
   private void Yes()
   {
-    windowCutscene.SetActive(true);
+    //windowCutscene.SetActive(true);
     windowNewGame.SetActive(false);
-    PlayerPrefs.SetInt("PointsPlayer", 0);  
+    PlayerPrefs.SetInt("PointsPlayer", 0);
+    SceneManager.LoadScene(sceneID);
   }
   
   private void No()
