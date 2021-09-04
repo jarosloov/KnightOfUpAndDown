@@ -14,15 +14,19 @@ public class ExitSwitching : MonoBehaviour
 
   [Header("Window")]
   [SerializeField] private GameObject windowExit;
-  
-  
-  private string[] _nameButtons;  
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource switchh;
+    private AudioClip _clip;
+
+    private string[] _nameButtons;  
   private int _position;
   
 
   private void Start()
   {
-    _nameButtons = new string[menuButton.Length];
+        _clip = switchh.clip;
+        _nameButtons = new string[menuButton.Length];
     for (var i = 0; i < menuButton.Length; i++)
       _nameButtons[i] = menuButton[i].text;
     _position = 0;
@@ -31,20 +35,31 @@ public class ExitSwitching : MonoBehaviour
   
   private void Update()
   {
-    if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && _position != 0)
-      PrintButton(IndexPosition(--_position));
-    if (( Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && _position != menuButton.Length - 1)
-      PrintButton(IndexPosition(++_position));
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+             Input.GetKeyDown(KeyCode.UpArrow) ||
+             Input.GetKeyDown(KeyCode.LeftArrow)) && _position != 0)
+        {
+            PrintButton(IndexPosition(--_position));
+            switchh.PlayOneShot(_clip);
+        }
+        if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) ||
+             Input.GetKeyDown(KeyCode.DownArrow) ||
+             Input.GetKeyDown(KeyCode.RightArrow)
+             ) && _position != menuButton.Length - 1)
+        {
+            PrintButton(IndexPosition(++_position));
+            switchh.PlayOneShot(_clip);
+        }
 
-    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
     {
       //Action
       switch (menuButton[_position].text)
       {
-        case "~ No ~":
+        case "~ Нет ~":
           No();
           break;
-        case "~ Yes ~":
+        case "~ Да ~":
           Yes();
           break;
       }

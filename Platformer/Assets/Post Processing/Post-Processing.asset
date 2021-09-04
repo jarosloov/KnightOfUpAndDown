@@ -184,7 +184,7 @@ MonoBehaviour:
     value: 0
   color:
     overrideState: 1
-    value: {r: 0.5840786, g: 0.72305536, b: 0.65837497, a: 1}
+    value: {r: 0.2917707, g: 0.78353804, b: 0.637597, a: 1}
   fastMode:
     overrideState: 1
     value: 0
@@ -194,7 +194,7 @@ MonoBehaviour:
     defaultState: 1
   dirtIntensity:
     overrideState: 1
-    value: 2.51
+    value: 1
 --- !u!114 &7588785303769198298
 MonoBehaviour:
   m_ObjectHideFlags: 3

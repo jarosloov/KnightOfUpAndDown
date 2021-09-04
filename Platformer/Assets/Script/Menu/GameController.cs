@@ -8,12 +8,6 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        _continue.SetActive(false);
-        _newGame.SetActive(false);
-    }
-
-    private void Update()
-    {
         if (PlayerPrefs.GetInt("PointsPlayer") == 0)
         {
             _continue.SetActive(false);
@@ -25,4 +19,5 @@ public class GameController : MonoBehaviour
             _newGame.SetActive(false);
         }
     }
+    
 }

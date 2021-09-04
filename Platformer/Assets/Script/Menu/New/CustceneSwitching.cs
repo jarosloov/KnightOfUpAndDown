@@ -12,7 +12,11 @@ public class CustceneSwitching : MonoBehaviour
   public Color noActiveColor;
   public Color activeColor;
 
-  [Header("Window")]
+    [Header("Audio")]
+    [SerializeField] private AudioSource switchh;
+    private AudioClip _clip;
+
+    [Header("Window")]
   [SerializeField] private GameObject windowTutorial;
 
   [SerializeField] private GameObject windowCutscene;
@@ -24,33 +28,39 @@ public class CustceneSwitching : MonoBehaviour
 
   private void Start()
   {
-    _nameButtons = new string[menuButton.Length];
-    for (var i = 0; i < menuButton.Length; i++)
-      _nameButtons[i] = menuButton[i].text;
-    _position = 0;
-    PrintButton(_position);
+        _clip = switchh.clip;
+        _nameButtons = new string[menuButton.Length];
+        for (var i = 0; i < menuButton.Length; i++)
+            _nameButtons[i] = menuButton[i].text;
+        _position = 0;
+        PrintButton(_position);
   }
   
   private void Update()
   {
-    if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && _position != 0)
-      PrintButton(IndexPosition(--_position));
-    if (( Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && _position != menuButton.Length - 1)
-      PrintButton(IndexPosition(++_position));
+        if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && _position != 0)
+        {
+            PrintButton(IndexPosition(--_position));
+            switchh.PlayOneShot(_clip);
+        }
+        if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) && _position != menuButton.Length - 1))
+        {
+            PrintButton(IndexPosition(++_position));
+            switchh.PlayOneShot(_clip);
+        }
 
-    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
-    {
-      //Action
-      switch (menuButton[_position].text)
-      {
-        case "~ No ~":
-          No();
-          break;
-        case "~ Yes ~":
-          Yes();
-          break;
-      }
-    }
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
+        {
+          switch (menuButton[_position].text)
+          {
+            case "~ No ~":
+              No();
+              break;
+            case "~ Yes ~":
+              Yes();
+              break;
+          }
+        }
   }
 
   private void Yes()
@@ -58,8 +68,6 @@ public class CustceneSwitching : MonoBehaviour
     PlayerPrefs.SetInt("Cutscene", 0);
     windowCutscene.SetActive(false);
     windowTutorial.SetActive(true);
-    
-      
   }
 
   private void No()

@@ -17,45 +17,59 @@ public class ContinueSwitching : MonoBehaviour
   [SerializeField] private GameObject windowNewGame;
   [SerializeField] private GameObject windowExitGame;
   [SerializeField] private GameObject windowSettings;
-  
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource switchh;
+    private AudioClip _clip;
 
-  private string[] _nameButtons;  
+    private string[] _nameButtons;  
   private int _position;
   
 
   private void Start()
   {
-    _nameButtons = new string[menuButton.Length];
-    for (var i = 0; i < menuButton.Length; i++)
-      _nameButtons[i] = menuButton[i].text;
-    _position = 0;
-    PrintButton(_position);
+        _clip = switchh.clip;
+        _nameButtons = new string[menuButton.Length];
+        for (var i = 0; i < menuButton.Length; i++)
+            _nameButtons[i] = menuButton[i].text;
+        _position = 0;
+        PrintButton(_position);
   }
   
   private void Update()
   {
-    if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && _position != 0)
-      PrintButton(IndexPosition(--_position));
-    if ((Input.GetKeyDown(KeyCode.S)  || Input.GetKeyDown(KeyCode.DownArrow)) && _position != menuButton.Length - 1)
-      PrintButton(IndexPosition(++_position));
-    
-    
-    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+             Input.GetKeyDown(KeyCode.UpArrow) ||
+             Input.GetKeyDown(KeyCode.LeftArrow)) && _position != 0)
+        {
+            PrintButton(IndexPosition(--_position));
+            switchh.PlayOneShot(_clip);
+        }
+        if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) ||
+             Input.GetKeyDown(KeyCode.DownArrow) ||
+             Input.GetKeyDown(KeyCode.RightArrow)
+             ) && _position != menuButton.Length - 1)
+        {
+            PrintButton(IndexPosition(++_position));
+            switchh.PlayOneShot(_clip);
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
     {
       //Action
       switch (menuButton[_position].text)
       {
-        case "~ Continue ~":
+        case "~ Продаолжить ~":
           ClickButtonContinue();
           break;
-        case "~ New Game ~":
+        case "~ Новая игра ~":
           ClickButtonNewGame();
           break;
-        case "~ Settings ~":
+        case "~ Настройки ~":
           ClickButtonSettings();
           break;
-        case "~ Exit ~":
+        case "~ Выйти ~":
           ClickButtonExitGame();
           break;
       }

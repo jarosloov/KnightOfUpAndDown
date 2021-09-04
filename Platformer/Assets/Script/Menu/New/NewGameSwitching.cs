@@ -6,25 +6,31 @@ using UnityEngine.SceneManagement;
 
 public class NewGameSwitching : MonoBehaviour
 {
-  [Header("Element")]
-  [SerializeField] private TextMeshProUGUI [] menuButton;
+    [Header("Element")]
+    [SerializeField] private TextMeshProUGUI [] menuButton;
 
-  [Header("Color")]
-  public Color noActiveColor;
-  public Color activeColor;
+    [Header("Color")]
+    public Color noActiveColor;
+    public Color activeColor;
 
-  [Header("Window")]
-  [SerializeField] private GameObject windowCutscene;
-  [SerializeField] private GameObject windowExitGame;
-  [SerializeField] private GameObject windowSettings;
+    [Header("Window")]
+    [SerializeField] private GameObject windowCutscene;
+    [SerializeField] private GameObject windowExitGame;
+    [SerializeField] private GameObject windowSettings;
 
+  
 
-  private string[] _nameButtons;  
-  private int _position;
+    [Header("Audio")]
+    [SerializeField] private AudioSource switchh;
+    private AudioClip _clip;
+
+    private string[] _nameButtons;  
+    private int _position;
   
 
   private void Start()
   {
+        _clip = switchh.clip;
     _nameButtons = new string[menuButton.Length];
     for (var i = 0; i < menuButton.Length; i++)
       _nameButtons[i] = menuButton[i].text;
@@ -34,24 +40,31 @@ public class NewGameSwitching : MonoBehaviour
   
   private void Update()
   {
-    if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && _position != 0)
-      PrintButton(IndexPosition(--_position));
-    if ((Input.GetKeyDown(KeyCode.S)  || Input.GetKeyDown(KeyCode.DownArrow)) && _position != menuButton.Length - 1)
-      PrintButton(IndexPosition(++_position));
-    
-    
-    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && _position != 0)
+        {
+            PrintButton(IndexPosition(--_position));
+            switchh.PlayOneShot(_clip);
+        }
+        if ((Input.GetKeyDown(KeyCode.S)  || Input.GetKeyDown(KeyCode.DownArrow)) && _position != menuButton.Length - 1)
+        {
+            PrintButton(IndexPosition(++_position));
+            switchh.PlayOneShot(_clip);
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Space))
     {
       //Action
       switch (menuButton[_position].text)
       {
-        case "~ New Game ~":
+        case "~ Новая игра ~":
           ClickButtonNewGame();
           break;
-        case "~ Settings ~":
+        case "~ Настройки ~":
           ClickButtonSettings();
           break;
-        case "~ Exit ~":
+        case "~ Выйти ~":
           ClickButtonExitGame();
           break;
       }
@@ -60,16 +73,21 @@ public class NewGameSwitching : MonoBehaviour
 
   private void ClickButtonExitGame()
   {
+    
     windowExitGame.SetActive(true);
+    gameObject.SetActive(false);
   }
 
   private void ClickButtonSettings()
   {
     windowSettings.SetActive(true);
+    
+    gameObject.SetActive(false);
   }
 
   private void ClickButtonNewGame()
   {
+    gameObject.SetActive(false);
     windowCutscene.SetActive(true);
   }
 
